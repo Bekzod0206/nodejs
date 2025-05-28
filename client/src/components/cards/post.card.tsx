@@ -16,7 +16,6 @@ import { useMutation } from "@tanstack/react-query"
 import { postStore } from "@/store/post.store"
 import { toast } from "sonner"
 import FillLoading from "../shared/fill-loading"
-import { PopoverClose } from "@radix-ui/react-popover"
 
 function PostCard({post}: {post: IPost}) {
 

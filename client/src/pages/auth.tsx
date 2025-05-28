@@ -9,7 +9,7 @@ function Auth() {
 
   return (
     <div className="w-full h-screen flex justify-center items-center">
-      <Card className="w-1/3 bg-secondary p-3 rounded-[10px]">
+      <Card className="w-1/3 bg-secondary p-3 rounded-[10px] relative">
         <CardContent>
           {authState === "login" && <Login /> }
           {authState === "register" && <Register /> }

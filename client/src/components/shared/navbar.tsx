@@ -2,9 +2,13 @@ import { Link } from "react-router-dom"
 import { Button } from "../ui/button"
 import CreatePost from "../create-post"
 import { useCreatePost } from "@/hooks/use-create-post"
+import { authStore } from "@/store/auth.store"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu"
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 
 function Navbar() {
 
+  const {isAuth, user} = authStore()
   const { onOpen } = useCreatePost()
 
   return (
@@ -16,15 +20,33 @@ function Navbar() {
             <p className="font-bold text-4xl">Blog site</p>
           </Link>
 
-          <div className="flex gap-2">
+          <div className="flex items-center gap-2">
             <Button className="rounded-full font-bold cursor-pointer" size={"lg"} variant={"outline"} onClick={onOpen}>
               Create Post
             </Button>
-            <Link to={"/auth"}>
-              <Button className="rounded-full font-bold cursor-pointer" size={"lg"}>
-                Auth
-              </Button>
-            </Link>
+            {isAuth ? 
+            (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Avatar className="cursor-pointer">
+                    <AvatarImage src="https://github.com/shadcn.png" />
+                    <AvatarFallback>CN</AvatarFallback>
+                  </Avatar>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuLabel className="line-clamp-2">{user.email}</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>Logout</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+            ) : (
+              <Link to={"/auth"}>
+                <Button className="rounded-full font-bold cursor-pointer" size={"lg"}>
+                  Auth
+                </Button>
+              </Link>
+            )}
           </div>
 
         </div>
