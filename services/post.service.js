@@ -4,9 +4,7 @@ import { FileService } from "./file.service.js"
 class PostServiceClass {
   async create(post, picture, author) {
     const fileName = await FileService.save(picture)
-    // const newPost = await PostModel.create({...post, picture: fileName, author})
-    const newPost = await PostModel.create({...post, picture: fileName}) //test need to remove
-    console.log(newPost, "newPost")
+    const newPost = await PostModel.create({...post, picture: fileName, author})
     return newPost
   }
 

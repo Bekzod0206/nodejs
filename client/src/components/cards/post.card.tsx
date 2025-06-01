@@ -1,6 +1,6 @@
 import type { IPost } from "@/interfaces"
 import { Card, CardContent, CardFooter, CardTitle } from "../ui/card"
-import $axios, { API_URL } from "@/http"
+import { API_URL } from "@/http"
 import { Button } from "../ui/button"
 import { useConfirm } from "@/hooks/use-confirm"
 import { useForm } from "react-hook-form"
@@ -16,6 +16,7 @@ import { useMutation } from "@tanstack/react-query"
 import { postStore } from "@/store/post.store"
 import { toast } from "sonner"
 import FillLoading from "../shared/fill-loading"
+import $api from "@/http/api"
 
 function PostCard({post}: {post: IPost}) {
 
@@ -38,7 +39,7 @@ function PostCard({post}: {post: IPost}) {
   const {mutate, isPending} = useMutation({
     mutationKey: ["edit-post"],
     mutationFn: async (values: z.infer<typeof postSchema>) => {
-      const {data} = await $axios.put(`/post/edit/${post._id}`, values)
+      const {data} = await $api.put(`/post/edit/${post._id}`, values)
       return data
     },
     onSuccess: (data) => {
@@ -47,7 +48,8 @@ function PostCard({post}: {post: IPost}) {
       setOpen(false)
     },
     onError: error => {
-      toast(error.message)
+      // @ts-ignore
+      toast(error.response.data.message)
     }
   })
 
@@ -63,7 +65,7 @@ function PostCard({post}: {post: IPost}) {
         <CardTitle className="line-clamp-1 text-lg">{post.title}</CardTitle>
         <p className="line-clamp-2 mt-1 text-muted-foreground text-sm">{post.body}</p>
       </CardContent>
-      <CardFooter className="gap-2 grid grid-cols-2">
+      <CardFooter className="gap-2 grid grid-cols-2 flex-1 items-end">
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
             <Button onClick={() => setOpen(true)}>Edit</Button>

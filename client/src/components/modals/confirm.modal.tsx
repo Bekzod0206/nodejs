@@ -2,10 +2,10 @@ import { useConfirm } from "@/hooks/use-confirm"
 import { Button } from "../ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog"
 import { useMutation } from "@tanstack/react-query"
-import $axios from "@/http"
 import { postStore } from "@/store/post.store"
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert"
 import FillLoading from "../shared/fill-loading"
+import $api from "@/http/api"
 
 function ConfirmModal() {
 
@@ -15,13 +15,17 @@ function ConfirmModal() {
   const {mutate, error, isPending} = useMutation({
     mutationKey: ["delete-post"],
     mutationFn: async () => {
-      const {data} = await $axios.delete(`/post/delete/${post._id}`)
+      const {data} = await $api.delete(`/post/delete/${post._id}`)
       return data
     },
     onSuccess: (data) => {
       const newData = posts.filter(c => c._id !== data._id)
       setPosts(newData)
       onClose()
+    },
+    onError: error => {
+      // @ts-ignore
+      toast(error.response.data.message)
     }
   })
 
@@ -31,7 +35,8 @@ function ConfirmModal() {
         {error && (
           <Alert>
             <AlertTitle>Error!</AlertTitle>
-            <AlertDescription>{error.message}</AlertDescription>
+            {/* @ts-ignore */}
+            <AlertDescription>{error?.response?.data.message}</AlertDescription>
           </Alert>
         )}
         {isPending && <FillLoading />}
