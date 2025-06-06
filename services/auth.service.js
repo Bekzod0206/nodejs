@@ -15,7 +15,7 @@ class AuthServiceClass {
     const user = await UserModel.create({email, password: hashPassword})
     const userDto = new UserDto(user)
 
-    await MailService.sendMail(email, `${process.env.API_URL}/api/auth/activation/${userDto.id}`)
+    await MailService.sendActivationMail(email, `${process.env.API_URL}/api/auth/activation/${userDto.id}`)
 
     const tokens = TokenService.generateToken({...userDto})
 
@@ -80,6 +80,37 @@ class AuthServiceClass {
   async getUsers () {
     return await UserModel.find()
   }
+
+  async forgotPassword(email) {
+    if(!email){
+      throw BaseError.BadRequest("Email is required")
+    }
+
+    const user = await UserModel.findOne({email})
+    if(!user){
+      throw BaseError.BadRequest("User is not defined")
+    }
+    const userDto = new UserDto(user)
+    const tokens = TokenService.generateToken({...userDto})
+
+    await MailService.sendForgotPasswordMail(email, `${process.env.CLIENT_URL}/recovery-account/${tokens.accessToken}`)
+    return 200
+  }
+
+  async recoveryAccount(token, password) {
+    if(!token) {
+      throw BaseError.BadRequest("Something went wrong")
+    }
+
+    const userData = TokenService.verifyAccessToken(token)
+    if(!userData){
+      throw BaseError.BadRequest("Expired access")
+    }
+    const hashPassword = await bcrypt.hash(password, 10)
+    await UserModel.findByIdAndUpdate(userData.id, {password: hashPassword})
+    return 200
+  }
+
 }
 
 const AuthService = new AuthServiceClass()

@@ -1,3 +1,4 @@
+import ForgotPassword from "@/components/auth/forgot-password"
 import Login from "@/components/auth/login"
 import Register from "@/components/auth/register"
 import { Card, CardContent } from "@/components/ui/card"
@@ -22,6 +23,7 @@ function Auth() {
         <CardContent>
           {authState === "login" && <Login /> }
           {authState === "register" && <Register /> }
+          {authState === "forgot-password" && <ForgotPassword /> }
         </CardContent>
       </Card>
     </div>

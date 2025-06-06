@@ -6,6 +6,7 @@ import { toast } from "sonner"
 import $axios from "./http"
 import { authStore } from "./store/auth.store"
 import { useEffect } from "react"
+import RecoveryAccount from "./pages/recovery-account"
 
 function App() {
 
@@ -38,6 +39,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/auth" element={<Auth />} />
+        <Route path="/recovery-account/:token" element={<RecoveryAccount />} />
       </Routes>
     </>
   )

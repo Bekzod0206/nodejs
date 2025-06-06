@@ -14,7 +14,7 @@ class MailServiceClass {
     })
   }
 
-  async sendMail(email, activationLink) {
+  async sendActivationMail(email, activationLink) {
     const transporter = await this.transporterConfig()
     await transporter.sendMail({
       from: process.env.SMTP_USER,
@@ -23,6 +23,22 @@ class MailServiceClass {
       html: `
         <div>
           <a href="${activationLink}">Click to activate account</a>
+        </div>
+      `
+    })
+  }
+
+  async sendForgotPasswordMail(email, activationLink) {
+    const transporter = await this.transporterConfig()
+    await transporter.sendMail({
+      from: process.env.SMTP_USER,
+      to: email,
+      subject: `Forgot password.`,
+      html: `
+        <div>
+          <h1>Click the link below in order to recover your account</h1>
+          <a href="${activationLink}"> - Recovery link</a>
+          <b>This link expires within 15 minutes</b>
         </div>
       `
     })

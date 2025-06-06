@@ -15,6 +15,8 @@ authRouter.post('/login', AuthController.login)
 authRouter.post('/logout', AuthController.logout)
 authRouter.get('/refresh', AuthController.refresh)
 authRouter.get('/get-users', authMiddleware, AuthController.getuser)
+authRouter.post('/forgot-password', AuthController.forgotPassword)
+authRouter.put('/recovery-account', AuthController.recoveryAccount)
 
 
 export {authRouter}
